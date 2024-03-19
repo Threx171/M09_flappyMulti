@@ -4,46 +4,48 @@ import 'package:flame/effects.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 
-class Player extends SpriteAnimationComponent
-    with CollisionCallbacks, HasGameRef {
-  Player() : super(position: Vector2.all(100), size: Vector2.all(50));
+import 'game.dart';
 
-  final velocity = Vector2(0, 150);
+class Player extends SpriteAnimationComponent
+    with CollisionCallbacks, HasGameRef<FlappyEmber> {
+  Player() : super(size: Vector2(100, 100), position: Vector2(100, 100));
 
   @override
-  Future<void> onLoad() async {
+  Future<void>? onLoad() async {
+    add(CircleHitbox(radius: 40));
+
+    final image = await Flame.images.load('bluebird.png');
     animation = SpriteAnimation.fromFrameData(
-      await Flame.images.load('ember.png'),
+      image,
       SpriteAnimationData.sequenced(
         amount: 4,
-        textureSize: Vector2.all(16),
-        stepTime: 0.12,
+        stepTime: 0.10,
+        textureSize: Vector2.all(222),
       ),
     );
-    add(CircleHitbox());
+  }
+
+  @override
+  void onCollisionStart(_, __) {
+    super.onCollisionStart(_, __);
+    gameRef.gameover();
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    position.y += velocity.y * dt;
-  }
 
-  @override
-  void onCollisionStart(Set<Vector2> _, PositionComponent other) {
-    super.onCollisionStart(_, other);
-    gameRef.pauseEngine();
+    position.y += 300 * dt;
   }
 
   void fly() {
-    add(
-      MoveByEffect(
-        Vector2(0, -100),
+    final effect = MoveByEffect(
+        Vector2(0, -150),
         EffectController(
-          duration: 0.2,
+          duration: 0.5,
           curve: Curves.decelerate,
-        ),
-      ),
-    );
+        ));
+
+    add(effect);
   }
 }

@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'game.dart'; // Import the game file
+import 'loading_menu.dart';
 import 'utils_websockets.dart';
 
 class ConnectionScreen extends StatefulWidget {
@@ -69,15 +70,11 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
                   onPressed: () {
                     // Initialize the game
                     initializeWebSocket(ipAddress, int.parse(ipPort), username);
-                    final game = FlappyEmber();
-                    game.initializeGame(loadHud: true);
-
-                    final gameWidget = GameWidget(game: game);
 
                     // Navigate to the game screen
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => gameWidget),
+                      MaterialPageRoute(builder: (context) => LoadingMenu()),
                     );
                   },
                 ),
@@ -89,11 +86,7 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
 
   void initializeWebSocket(String ip, int port, String username) {
     websocket = WebSocketsHandler();
-    try {
-      websocket.connectToServer(ip, port, serverMessageHandler);
-    } catch (e) {
-      print("Error: $e");
-    }
+    websocket.connectToServer(ip, port, serverMessageHandler);
   }
 
   void serverMessageHandler(String message) {

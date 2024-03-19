@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
 export "FLUTTER_ROOT=/home/super/snap/flutter/common/flutter"
-export "FLUTTER_APPLICATION_PATH=/home/super/Documents/DAM/MP09/Aiii/flappy_ember"
+export "FLUTTER_APPLICATION_PATH=/home/super/Documents/MP09/M09_flappyMulti/flappy_ember"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_BUILD_DIR=build"
 export "FLUTTER_BUILD_NAME=1.0.0"

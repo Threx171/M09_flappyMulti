@@ -32,7 +32,6 @@ class WebSocketsHandler {
     await Future.delayed(const Duration(seconds: 1));
 
     _socketClient = IOWebSocketChannel.connect("ws://$ip:$port");
-    print("hola");
     _socketClient!.stream.listen(
       (message) {
         if (connectionStatus != ConnectionStatus.connected) {
@@ -42,7 +41,6 @@ class WebSocketsHandler {
       },
       onError: (error) {
         connectionStatus = ConnectionStatus.disconnected;
-        print("holaa");
         mySocketId = "";
         if (kDebugMode) {
           print("Error WebSocketHandler: $error\n");
