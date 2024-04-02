@@ -4,6 +4,8 @@ import 'dart:math';
 
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'app_data.dart';
 import 'game.dart'; // Import the game file
 import 'loading_menu.dart';
 import 'utils_websockets.dart';
@@ -102,9 +104,17 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
       if (data['type'] == 'data') {
         var value = data['value'];
         if (value is List) {
-          //updateOpponents(value);
+          updateOpponents(value);
         }
       }
+    }
+  }
+
+  void updateOpponents(List value){
+    AppData appData = Provider.of<AppData>(context, listen: false); // ESTO PETA
+    for (var item in value) {
+      String nombre = item['nombre'];
+      appData.nombresList.add(nombre);
     }
   }
 
