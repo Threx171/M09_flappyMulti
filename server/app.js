@@ -19,6 +19,7 @@ const debug = true
 
 var ws = new webSockets()
 var gLoop = new gameLoop()
+let gameStart = false; 
 
 // Start HTTP server
 const app = express()
@@ -75,11 +76,14 @@ ws.onMessage = (socket, id, msg) => {
     case "init":
       clientData.name = obj.name
       clientData.color = obj.color
+      clientData.status = false
       break;
     case "move":
       clientData.x = obj.x
       clientData.y = obj.y
       break
+    case "ready":
+      clientData.status = !clientData.status
   }
 }
 
@@ -101,6 +105,18 @@ gLoop.run = (fps) => {
   let clientsData = ws.getClientsData()
 
   // Gestionar aquí la partida, estats i final
+  if(clientsData.length == 0) gameStart = false;
+
+  if(!gameStart){
+    if(clientsData.length > 0) gameStart = true;
+    clientsData.forEach(function(client) {
+      if(!client.status) gameStart = false;
+    });
+    if(gameStart){
+      console.log("hola");
+      ws.broadcast(JSON.stringify({ type: "start" }));
+    }
+  }
   //console.log(clientsData)
 
   // Send game status data to everyone

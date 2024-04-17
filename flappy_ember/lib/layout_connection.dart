@@ -89,7 +89,7 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
       // Simular retraso para dar tiempo al servidor a responder
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => LoadingMenu()),
+        MaterialPageRoute(builder: (context) => LoadingMenu(websocket)),
       );
     });
   }
@@ -109,6 +109,17 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
         if (value is List) {
           updateOpponents(value);
         }
+      }
+      if (data['type'] == 'start') {
+        print("AAAAAAAAAA");
+        final game = FlappyEmber();
+        game.initializeGame(loadHud: true);
+
+        final gameWidget = GameWidget(game: game);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => gameWidget),
+        );
       }
     }
   }

@@ -1,27 +1,26 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'app_data.dart';
 import 'game.dart';
+import 'utils_websockets.dart';
 
 class LoadingMenu extends StatefulWidget {
+  late WebSocketsHandler websocket;
+
+  LoadingMenu(this.websocket);
+
   @override
-  _LoadingMenuState createState() => _LoadingMenuState();
+  _LoadingMenuState createState() => _LoadingMenuState(websocket);
 }
 
 class _LoadingMenuState extends State<LoadingMenu> {
-  // List<Player> players = [
-  //   Player(name: "Lionel Messi", position: "Delantero"),
-  //   Player(name: "Cristiano Ronaldo", position: "Delantero"),
-  //   Player(name: "Neymar Jr.", position: "Delantero"),
-  //   Player(name: "Kylian Mbappé", position: "Delantero"),
-  //   Player(name: "Robert Lewandowski", position: "Delantero"),
-  //   Player(name: "Kevin De Bruyne", position: "Centrocampista"),
-  //   Player(name: "Sergio Ramos", position: "Defensa"),
-  //   Player(name: "Virgil van Dijk", position: "Defensa"),
-  //   Player(name: "Mohamed Salah", position: "Delantero"),
-  //   Player(name: "Sadio Mané", position: "Delantero"),
-  // ];
+  late WebSocketsHandler websocket;
+
+  _LoadingMenuState(this.websocket);
 
   @override
   Widget build(BuildContext context) {
@@ -52,15 +51,7 @@ class _LoadingMenuState extends State<LoadingMenu> {
           ),
           ElevatedButton(
             onPressed: () {
-              final game = FlappyEmber();
-              game.initializeGame(loadHud: true);
-
-              final gameWidget = GameWidget(game: game);
-
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => gameWidget),
-              );
+              websocket.sendMessage('{"type": "ready"}');
             },
             child: Text('PLAY'),
           ),
