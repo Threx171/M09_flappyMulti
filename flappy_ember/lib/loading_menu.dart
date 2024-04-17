@@ -9,7 +9,7 @@ class LoadingMenu extends StatefulWidget {
   _LoadingMenuState createState() => _LoadingMenuState();
 }
 
-class _LoadingMenuState extends State<LoadingMenu>{
+class _LoadingMenuState extends State<LoadingMenu> {
   // List<Player> players = [
   //   Player(name: "Lionel Messi", position: "Delantero"),
   //   Player(name: "Cristiano Ronaldo", position: "Delantero"),
@@ -26,46 +26,46 @@ class _LoadingMenuState extends State<LoadingMenu>{
   @override
   Widget build(BuildContext context) {
     AppData appData = Provider.of<AppData>(context, listen: false);
-
+    print(appData.nombresList);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lista de Jugadores'),
       ),
       body: Center(
-        child: Padding(padding: const EdgeInsets.all(50.0),
           child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 200,
-              child: ListView.builder(
-                itemCount: appData.nombresList.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    height: 50,
-                    child: PlayerListItem(name: appData.nombresList[index]),
-                  );
-                },
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final game = FlappyEmber();
-                game.initializeGame(loadHud: true);
-
-                final gameWidget = GameWidget(game: game);
-
-                Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => gameWidget),
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 100,
+            child: ListView.builder(
+              itemCount: appData.nombresList.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  child: Column(
+                    children: [
+                      PlayerListItem(name: appData.nombresList[index]),
+                    ],
+                  ),
                 );
               },
-              child: Text('PLAY'),
             ),
-          ],
-        ))
-        
-      ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final game = FlappyEmber();
+              game.initializeGame(loadHud: true);
+
+              final gameWidget = GameWidget(game: game);
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => gameWidget),
+              );
+            },
+            child: Text('PLAY'),
+          ),
+        ],
+      )),
     );
   }
 }

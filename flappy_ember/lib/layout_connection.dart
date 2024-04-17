@@ -16,8 +16,8 @@ class ConnectionScreen extends StatefulWidget {
 }
 
 class _ConnectionScreenState extends State<ConnectionScreen> {
-  String ipAddress = '';
-  String ipPort = '';
+  String ipAddress = '127.0.0.1';
+  String ipPort = '8888';
   String username = '';
   late WebSocketsHandler websocket;
 
@@ -71,13 +71,8 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
                   child: Text('Connect'),
                   onPressed: () {
                     // Initialize the game
-                    initializeWebSocket(ipAddress, int.parse(ipPort), username);
-
-                    // Navigate to the game screen
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoadingMenu()),
-                    );
+                    initializeWebSocket(
+                        ipAddress, int.parse(ipPort), username, context);
                   },
                 ),
               ],
@@ -86,13 +81,21 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
         ));
   }
 
-  void initializeWebSocket(String ip, int port, String username) {
+  void initializeWebSocket(
+      String ip, int port, String username, BuildContext context) {
     websocket = WebSocketsHandler();
     websocket.connectToServer(ip, port, serverMessageHandler);
+    Future.delayed(Duration(seconds: 3), () {
+      // Simular retraso para dar tiempo al servidor a responder
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LoadingMenu()),
+      );
+    });
   }
 
   void serverMessageHandler(String message) {
-    print("Message received: $message");
+    //print("Message received: $message");
     // Processar els missatges rebuts
     final data = json.decode(message);
 
@@ -110,11 +113,19 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
     }
   }
 
-  void updateOpponents(List value){
+  void updateOpponents(List value) {
     AppData appData = Provider.of<AppData>(context, listen: false); // ESTO PETA
     for (var item in value) {
-      String nombre = item['nombre'];
-      appData.nombresList.add(nombre);
+      try {
+        String id = item['id'];
+        String nombre = item['name'];
+        if (!appData.idList.contains(id)) {
+          appData.idList.add(id);
+          appData.nombresList.add(nombre);
+        }
+      } catch (e) {
+        print(e);
+      }
     }
   }
 
