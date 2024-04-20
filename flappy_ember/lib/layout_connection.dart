@@ -133,6 +133,7 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
         if (!appData.idList.contains(id)) {
           appData.idList.add(id);
           appData.nombresList.add(nombre);
+          appData.forceNotifyListeners();
         }
       } catch (e) {
         print(e);
