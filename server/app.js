@@ -20,6 +20,7 @@ const debug = true
 var ws = new webSockets()
 var gLoop = new gameLoop()
 let gameStart = false; 
+var colors = [0, 1, 2, 3]
 
 // Start HTTP server
 const app = express()
@@ -74,9 +75,12 @@ ws.onMessage = (socket, id, msg) => {
   let obj = JSON.parse(msg)
   switch (obj.type) {
     case "init":
-      clientData.name = obj.name
-      clientData.color = obj.color
-      clientData.status = false
+      if(colors.length > 0){
+        clientData.name = obj.name
+        clientData.color = colors[0]
+        clientData.status = false
+        colors.splice(0, 1);
+      }
       break;
     case "move":
       clientData.x = obj.x

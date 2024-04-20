@@ -1,6 +1,5 @@
 // connection_screen.dart
 import 'dart:convert';
-import 'dart:js';
 import 'dart:math';
 
 import 'package:flame/game.dart';
@@ -116,7 +115,7 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
       }
       if (data['type'] == 'start') {
         print("AAAAAAAAAA");
-        final game = FlappyEmber();
+        final game = FlappyEmber(websocket);
         game.initializeGame(loadHud: true);
 
         final gameWidget = GameWidget(game: game);
@@ -143,6 +142,7 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
         print(e);
       }
     }
+    print(appData.nombresList);
   }
 
   void initPlayer(String id) {

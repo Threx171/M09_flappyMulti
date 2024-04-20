@@ -25,7 +25,6 @@ class _LoadingMenuState extends State<LoadingMenu> {
   @override
   Widget build(BuildContext context) {
     AppData appData = Provider.of<AppData>(context, listen: false);
-    print(appData.nombresList);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lista de Jugadores'),

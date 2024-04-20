@@ -21,6 +21,9 @@ class FlappyEmber extends FlameGame with TapDetector, HasCollisionDetection {
   TextComponent? scoreText;
   late WebSocketsHandler websocket;
   int score = 0;
+
+  FlappyEmber(this.websocket);
+
   @override
   Future<void>? onLoad() async {
     player = Player();
