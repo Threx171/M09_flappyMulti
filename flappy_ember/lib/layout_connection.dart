@@ -1,5 +1,6 @@
 // connection_screen.dart
 import 'dart:convert';
+import 'dart:js';
 import 'dart:math';
 
 import 'package:flame/game.dart';
@@ -20,9 +21,12 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
   String ipPort = '8888';
   String username = '';
   late WebSocketsHandler websocket;
+  @override
+  late BuildContext context;
 
   @override
   Widget build(BuildContext context) {
+    this.context = context;
     return Scaffold(
         appBar: AppBar(
           title: Text('Connect to Game'),
@@ -125,7 +129,7 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
   }
 
   void updateOpponents(List value) {
-    AppData appData = Provider.of<AppData>(context, listen: false); // ESTO PETA
+    AppData appData = Provider.of<AppData>(context, listen: false);
     for (var item in value) {
       try {
         String id = item['id'];
