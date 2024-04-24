@@ -6,6 +6,7 @@ class AppData with ChangeNotifier {
 
   List<String> nombresList = [];
   List<String> idList = [];
+  Map<String, Map<String, dynamic>> players = {};
 
   void forceNotifyListeners() {
     super.notifyListeners();

@@ -101,11 +101,14 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
     //print("Message received: $message");
     // Processar els missatges rebuts
     final data = json.decode(message);
-
+    AppData appData = Provider.of<AppData>(context, listen: false);
     // Comprovar si 'data' és un Map i si 'type' és igual a 'data'
     if (data is Map<String, dynamic>) {
+      //print(data.toString());
       if (data['type'] == 'welcome') {
         initPlayer(data['id'].toString());
+        appData.id = data['id'].toString();
+        appData.name = username;
       }
       if (data['type'] == 'data') {
         var value = data['value'];
@@ -114,8 +117,7 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
         }
       }
       if (data['type'] == 'start') {
-        print("AAAAAAAAAA");
-        final game = FlappyEmber(websocket);
+        final game = FlappyEmber(websocket, context);
         game.initializeGame(loadHud: true);
 
         final gameWidget = GameWidget(game: game);
@@ -138,11 +140,17 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
           appData.nombresList.add(nombre);
           appData.forceNotifyListeners();
         }
+
+        appData.players[id] = {
+          "name": item['name'],
+          "color": item['color'],
+          "x": item['x'],
+          "y": item['y']
+        };
       } catch (e) {
         print(e);
       }
     }
-    print(appData.nombresList);
   }
 
   void initPlayer(String id) {

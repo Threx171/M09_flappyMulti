@@ -8,13 +8,32 @@ import 'game.dart';
 
 class Player extends SpriteAnimationComponent
     with CollisionCallbacks, HasGameRef<FlappyEmber> {
-  Player() : super(size: Vector2(100, 100), position: Vector2(100, 100));
+  final int type;
+  late var image;
+  final bool isEnemy;
+  final CircleHitbox hitbox = CircleHitbox(radius: 40);
+  Player(this.type, this.isEnemy)
+      : super(size: Vector2(100, 100), position: Vector2(100, 100));
 
   @override
   Future<void>? onLoad() async {
-    add(CircleHitbox(radius: 40));
+    if (!isEnemy) add(hitbox);
 
-    final image = await Flame.images.load('bluebird.png');
+    switch (type) {
+      case 0:
+        image = await Flame.images.load('bluebird.png');
+        break;
+      case 1:
+        image = await Flame.images.load('image_taronja.png');
+        break;
+      case 2:
+        image = await Flame.images.load('image_verd.png');
+        break;
+      case 3:
+        image = await Flame.images.load('image_vermell.png');
+        break;
+    }
+
     animation = SpriteAnimation.fromFrameData(
       image,
       SpriteAnimationData.sequenced(
