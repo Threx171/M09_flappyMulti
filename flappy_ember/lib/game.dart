@@ -57,6 +57,7 @@ class FlappyEmber extends FlameGame with TapDetector, HasCollisionDetection {
   }
 
   void gameover() {
+    websocket.sendMessage('{"type": "lost"}');
     pauseEngine();
   }
 

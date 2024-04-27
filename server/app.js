@@ -20,17 +20,19 @@ const debug = true
 var ws = new webSockets()
 var gLoop = new gameLoop()
 let gameStart = false; 
+let gameOver = false;
 var colors = [0, 1, 2, 3]
 
 // Start HTTP server
 const app = express()
 const port = process.env.PORT || 8888
+const host = '0.0.0.0'
 
 // Publish static files from 'public' folder
 app.use(express.static('public'))
 
 // Activate HTTP server
-const httpServer = app.listen(port, appListen)
+const httpServer = app.listen(port, host, appListen)
 async function appListen() {
   console.log(`Listening for HTTP queries on: http://localhost:${port}`)
 }
@@ -88,6 +90,8 @@ ws.onMessage = (socket, id, msg) => {
       break
     case "ready":
       clientData.status = !clientData.status
+    case "lost":
+      clientData.lost = true
   }
 }
 
@@ -117,12 +121,31 @@ gLoop.run = (fps) => {
       if(!client.status) gameStart = false;
     });
     if(gameStart){
-      console.log("hola");
+      if(clientsData.length > 0) gameStart = true;
+      clientsData.forEach(function(client) {
+        client.lost = false;
+      });
       ws.broadcast(JSON.stringify({ type: "start" }));
+    }
+  }else{
+    let playersAlive = 0;
+    let winnerName = "";
+    clientsData.forEach(function(client) {
+      if(!client.lost){
+        ++playersAlive;
+        winnerName = client.name;
+      } 
+    });
+    if(playersAlive ==1 && !gameOver){
+      clientsData.forEach(function(client) {
+        client.status = false;
+      });
+      gameOver=true;
+      ws.broadcast(JSON.stringify({ type: "finish", winner: winnerName }));
     }
   }
   //console.log(clientsData)
 
   // Send game status data to everyone
-  ws.broadcast(JSON.stringify({ type: "data", value: clientsData }))
+  ws.broadcast(JSON.stringify({ type: "data", value: clientsData }));
 }

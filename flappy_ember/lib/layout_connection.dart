@@ -6,6 +6,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'app_data.dart';
+import 'finish_screen.dart';
 import 'game.dart'; // Import the game file
 import 'loading_menu.dart';
 import 'utils_websockets.dart';
@@ -22,6 +23,7 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
   late WebSocketsHandler websocket;
   @override
   late BuildContext context;
+  late FlappyEmber game;
 
   @override
   Widget build(BuildContext context) {
@@ -117,13 +119,22 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
         }
       }
       if (data['type'] == 'start') {
-        final game = FlappyEmber(websocket, context);
+        game = FlappyEmber(websocket, context);
         game.initializeGame(loadHud: true);
 
         final gameWidget = GameWidget(game: game);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => gameWidget),
+        );
+      }
+      if (data['type'] == 'finish') {
+        print("AAAAAAAAAAAAAAAAAAA");
+        //game.gameover();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => FinishScreen(websocket, data['winner'])),
         );
       }
     }
