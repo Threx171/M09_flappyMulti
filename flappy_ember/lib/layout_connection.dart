@@ -115,10 +115,13 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
       if (data['type'] == 'data') {
         var value = data['value'];
         if (value is List) {
+          appData.forceNotifyListeners();
           updateOpponents(value);
         }
       }
       if (data['type'] == 'start') {
+        appData.seed = data['seed'];
+        appData.forceNotifyListeners();
         game = FlappyEmber(websocket, context);
         game.initializeGame(loadHud: true);
 
@@ -129,8 +132,6 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
         );
       }
       if (data['type'] == 'finish') {
-        print("AAAAAAAAAAAAAAAAAAA");
-        //game.gameover();
         Navigator.push(
           context,
           MaterialPageRoute(

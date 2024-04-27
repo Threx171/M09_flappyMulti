@@ -96,7 +96,7 @@ ws.onMessage = (socket, id, msg) => {
 }
 
 ws.onClose = (socket, id) => {
-  if (debug) console.log("WebSocket client disconnected: " + id)
+  //if (debug) console.log("WebSocket client disconnected: " + id)
 
   // Informem a tothom que el client s'ha desconnectat
   ws.broadcast(JSON.stringify({
@@ -125,7 +125,7 @@ gLoop.run = (fps) => {
       clientsData.forEach(function(client) {
         client.lost = false;
       });
-      ws.broadcast(JSON.stringify({ type: "start" }));
+      ws.broadcast(JSON.stringify({ type: "start", seed: Math.floor(Math.random() * 9000) + 1000 }));
     }
   }else{
     let playersAlive = 0;
@@ -137,6 +137,7 @@ gLoop.run = (fps) => {
       } 
     });
     if(playersAlive ==1 && !gameOver){
+      console.log("hola");
       clientsData.forEach(function(client) {
         client.status = false;
       });
@@ -147,5 +148,5 @@ gLoop.run = (fps) => {
   //console.log(clientsData)
 
   // Send game status data to everyone
-  ws.broadcast(JSON.stringify({ type: "data", value: clientsData }));
+  ws.broadcast(JSON.stringify({ type: "data", value: clientsData, seed: Math.floor(Math.random() * 9000) + 1000}));
 }

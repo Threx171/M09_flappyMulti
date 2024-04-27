@@ -4,18 +4,24 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/widgets.dart';
 import 'package:flame/flame.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'app_data.dart';
 import 'game.dart';
 import 'box.dart';
 
 class BoxStack extends PositionComponent with HasGameRef<FlappyEmber> {
   final bool isBottom;
-  static final random = Random();
+  late Random random;
+  late BuildContext context;
 
-  BoxStack({required this.isBottom});
+  BoxStack({required this.isBottom, required this.context});
 
   @override
   Future<void>? onLoad() async {
+    AppData appData = Provider.of<AppData>(context, listen: false);
+    random = Random(appData.seed);
     position.x = gameRef.size.x;
     final gameHeight = gameRef.size.y;
     final boxHeight = Box.initialSize.y;
